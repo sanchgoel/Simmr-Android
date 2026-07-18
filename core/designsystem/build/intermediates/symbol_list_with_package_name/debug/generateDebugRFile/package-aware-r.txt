@@ -1,8 +1,0 @@
-com.example.simmr.core.designsystem
-color simmr_cream_background
-font rethink_sans_bold
-font rethink_sans_extra_bold
-font rethink_sans_italic
-font rethink_sans_medium
-font rethink_sans_regular
-font rethink_sans_semi_bold
