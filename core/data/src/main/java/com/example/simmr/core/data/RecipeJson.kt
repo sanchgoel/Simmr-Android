@@ -62,7 +62,11 @@ object RecipeJson {
 internal object RecipeSchema {
     val json: JSONObject by lazy {
         fun nullable(type: String) = JSONArray(listOf(type, "null"))
-        fun property(type: Any) = JSONObject().put("type", type)
+        fun property(type: Any, description: String? = null, values: List<Any>? = null) =
+            JSONObject().put("type", type).apply {
+                description?.let { put("description", it) }
+                values?.let { put("enum", JSONArray(it)) }
+            }
         fun objectSchema(properties: JSONObject, required: List<String>) = JSONObject()
             .put("type", "object")
             .put("properties", properties)
@@ -75,40 +79,52 @@ internal object RecipeSchema {
                 .put("name", property("string"))
                 .put("quantity", property(nullable("number")))
                 .put("unit", property(nullable("string")))
-                .put("section", property(nullable("string")))
+                .put("section", property(nullable("string"), "Ingredient group such as Marinade, Curry, Garnish."))
                 .put("optional", property("boolean"))
-                .put("prep", property(nullable("string"))),
+                .put("prep", property(nullable("string"), "Short prep note such as 'finely minced' or 'diced'.")),
             ingredientFields,
         )
         val stepFields = listOf("stepNumber", "title", "instruction", "ingredientsUsed", "timerSeconds", "tips", "cookware", "heatLevel", "lid", "visualCue")
         val step = objectSchema(
             JSONObject()
                 .put("stepNumber", property("integer"))
-                .put("title", property("string"))
+                .put("title", property("string", "A short 3-6 word step title."))
                 .put("instruction", property("string"))
                 .put("ingredientsUsed", JSONObject().put("type", "array").put("items", property("string")))
                 .put("timerSeconds", property(nullable("integer")))
                 .put("tips", property(nullable("string")))
-                .put("cookware", property(nullable("string")))
-                .put("heatLevel", property(nullable("string")))
-                .put("lid", property(nullable("string")))
-                .put("visualCue", property(nullable("string"))),
+                .put("cookware", property(nullable("string"), "Cookware used in this step, if relevant."))
+                .put("heatLevel", property(nullable("string"), "Stove/oven heat level for this step, if relevant, e.g. low, medium, high."))
+                .put("lid", property(nullable("string"), "Whether the lid should be on or off, if relevant.", listOf("on", "off", JSONObject.NULL)))
+                .put("visualCue", property(nullable("string"), "How to visually judge doneness for this step, if relevant.")),
             stepFields,
         )
         val fields = listOf("title", "description", "servings", "prepTimeMinutes", "cookTimeMinutes", "caloriesPerServing", "optimizationSummary", "difficulty", "cuisine", "mealType", "dietaryTags", "ingredients", "steps")
         objectSchema(
             JSONObject()
-                .put("title", property("string"))
-                .put("description", property(nullable("string")))
-                .put("servings", property("integer"))
-                .put("prepTimeMinutes", property(nullable("integer")))
-                .put("cookTimeMinutes", property(nullable("integer")))
-                .put("caloriesPerServing", property(nullable("integer")))
-                .put("optimizationSummary", property(nullable("string")))
-                .put("difficulty", property(nullable("string")))
-                .put("cuisine", property(nullable("string")))
-                .put("mealType", JSONObject().put("type", "array").put("items", property("string")))
-                .put("dietaryTags", JSONObject().put("type", "array").put("items", property("string")))
+                .put("title", property("string", "The recipe's title."))
+                .put("description", property(nullable("string"), "A one to two sentence description of the dish."))
+                .put("servings", property("integer", "Number of servings. Estimate a reasonable default if not stated."))
+                .put("prepTimeMinutes", property(nullable("integer"), "Prep time in minutes, if stated or inferable."))
+                .put("cookTimeMinutes", property(nullable("integer"), "Cook time in minutes, if stated or inferable."))
+                .put("caloriesPerServing", property(nullable("integer"), "Estimated calories per serving."))
+                .put("optimizationSummary", property(nullable("string"), "Short note on what was changed to satisfy requested optimizations, or null if none were requested."))
+                .put("difficulty", property("string", "Difficulty for a home cook.", listOf("easy", "medium", "hard")))
+                .put("cuisine", property("string", "The single most fitting cuisine, e.g. Italian, Indian, Fusion."))
+                .put(
+                    "mealType",
+                    JSONObject()
+                        .put("type", "array")
+                        .put("description", "Meal occasions this dish fits, e.g. [\"Dinner\"] or [\"Breakfast\", \"Snack\"].")
+                        .put("items", property("string")),
+                )
+                .put(
+                    "dietaryTags",
+                    JSONObject()
+                        .put("type", "array")
+                        .put("description", "Dietary labels the recipe genuinely satisfies, e.g. Vegetarian, Vegan, Gluten-Free, High Protein.")
+                        .put("items", property("string")),
+                )
                 .put("ingredients", JSONObject().put("type", "array").put("items", ingredient))
                 .put("steps", JSONObject().put("type", "array").put("items", step)),
             fields,

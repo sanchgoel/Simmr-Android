@@ -15,6 +15,28 @@ interface RecipeRepository {
     suspend fun generate(input: String, optimizations: Set<RecipeOptimization>): Recipe
 }
 
+internal object OpenAIRecipeRequest {
+    fun create(systemPrompt: String, userPrompt: String): JSONObject = JSONObject()
+        .put("model", AppConstants.Network.OPENAI_MODEL)
+        .put("temperature", AppConstants.Network.TEMPERATURE)
+        .put(
+            "messages",
+            JSONArray()
+                .put(JSONObject().put("role", "system").put("content", systemPrompt))
+                .put(JSONObject().put("role", "user").put("content", userPrompt)),
+        )
+        .put(
+            "response_format",
+            JSONObject().put("type", "json_schema").put(
+                "json_schema",
+                JSONObject()
+                    .put("name", AppConstants.Network.RECIPE_SCHEMA_NAME)
+                    .put("strict", true)
+                    .put("schema", RecipeSchema.json),
+            ),
+        )
+}
+
 class OpenAIRecipeRepository(
     context: Context,
     private val settings: SettingsStore = SettingsStore(context),
@@ -26,25 +48,10 @@ class OpenAIRecipeRepository(
             val apiKey = settings.apiKey().orEmpty()
             if (apiKey.isBlank()) throw RecipeGenerationException.MissingApiKey
 
-            val request = JSONObject()
-                .put("model", AppConstants.Network.OPENAI_MODEL)
-                .put("temperature", AppConstants.Network.TEMPERATURE)
-                .put(
-                    "messages",
-                    JSONArray()
-                        .put(JSONObject().put("role", "system").put("content", settings.promptOverride() ?: RecipePrompt.DEFAULT))
-                        .put(JSONObject().put("role", "user").put("content", userPrompt(input, optimizations))),
-                )
-                .put(
-                    "response_format",
-                    JSONObject().put("type", "json_schema").put(
-                        "json_schema",
-                        JSONObject()
-                            .put("name", AppConstants.Network.RECIPE_SCHEMA_NAME)
-                            .put("strict", true)
-                            .put("schema", RecipeSchema.json),
-                    ),
-                )
+            val request = OpenAIRecipeRequest.create(
+                systemPrompt = settings.promptOverride() ?: RecipePrompt.DEFAULT,
+                userPrompt = userPrompt(input, optimizations),
+            )
 
             val connection = (URL(AppConstants.Network.OPENAI_ENDPOINT).openConnection() as HttpURLConnection).apply {
                 requestMethod = "POST"
@@ -141,15 +148,15 @@ sealed class RecipeGenerationException(message: String, cause: Throwable? = null
     class MalformedResponse(cause: Throwable) : RecipeGenerationException("Couldn't read the response from OpenAI. Please try again.", cause)
 }
 
-private object OptimizationInstructions {
+internal object OptimizationInstructions {
     private val values = mapOf(
-        RecipeOptimization.LOWER_CALORIES to "Reduce calories per serving with lighter cooking methods and sensible substitutions without losing the dish's identity.",
-        RecipeOptimization.HIGHER_PROTEIN to "Increase protein with suitable portions, additions, or substitutions while keeping the dish coherent.",
-        RecipeOptimization.LOWER_SUGAR to "Reduce added sugar or use lower-sugar substitutions while keeping the dish palatable.",
-        RecipeOptimization.LOW_CARB to "Reduce or replace high-carb ingredients while keeping the dish coherent.",
-        RecipeOptimization.DAIRY_FREE to "Replace all dairy with suitable dairy-free alternatives.",
-        RecipeOptimization.SPICIER to "Increase appropriate chilies or spices while preserving the flavor profile.",
-        RecipeOptimization.KID_FRIENDLY to "Use mild, familiar, approachable flavors and ingredients.",
+        RecipeOptimization.LOWER_CALORIES to "Reduce overall calories per serving where reasonable (lighter cooking methods, portion-conscious amounts, lower-calorie substitutions) without losing the dish's identity.",
+        RecipeOptimization.HIGHER_PROTEIN to "Increase the protein content where reasonable (larger protein portions, protein-rich additions or substitutions) while keeping the dish coherent.",
+        RecipeOptimization.LOWER_SUGAR to "Reduce the sugar content where reasonable (less added sugar, lower-sugar substitutions) while keeping the dish palatable.",
+        RecipeOptimization.LOW_CARB to "Make this recipe lower-carb where reasonable (swap or reduce high-carb ingredients like rice, pasta, bread, or sugar) while keeping the dish coherent.",
+        RecipeOptimization.DAIRY_FREE to "Make this recipe dairy-free by substituting any dairy ingredients (milk, butter, cheese, cream, yogurt) with suitable dairy-free alternatives.",
+        RecipeOptimization.SPICIER to "Make this recipe spicier — increase existing chilies/spices or add appropriate heat, while keeping the dish's overall flavor profile.",
+        RecipeOptimization.KID_FRIENDLY to "Make this recipe more kid-friendly — mild flavors, less spice, familiar and approachable ingredients.",
     )
     fun forOption(option: RecipeOptimization): String? = values[option]
 }
