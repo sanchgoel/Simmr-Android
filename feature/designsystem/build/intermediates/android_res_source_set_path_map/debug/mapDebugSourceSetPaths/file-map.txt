@@ -1,0 +1,9 @@
+com.example.simmr.feature.designsystem-pngs-0 /Users/varun.gupta/Documents/dev/sanchit/android/feature/designsystem/build/generated/res/pngs/debug
+com.example.simmr.feature.designsystem-updated_navigation_xml-1 /Users/varun.gupta/Documents/dev/sanchit/android/feature/designsystem/build/generated/updated_navigation_xml/debug
+com.example.simmr.feature.designsystem-mergeDebugResources-2 /Users/varun.gupta/Documents/dev/sanchit/android/feature/designsystem/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
+com.example.simmr.feature.designsystem-mergeDebugResources-3 /Users/varun.gupta/Documents/dev/sanchit/android/feature/designsystem/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+com.example.simmr.feature.designsystem-debug-4 /Users/varun.gupta/Documents/dev/sanchit/android/feature/designsystem/build/intermediates/merged_res/debug/mergeDebugResources
+com.example.simmr.feature.designsystem-debug-5 /Users/varun.gupta/Documents/dev/sanchit/android/feature/designsystem/build/intermediates/packaged_res/debug/packageDebugResources
+com.example.simmr.feature.designsystem-debug-6 /Users/varun.gupta/Documents/dev/sanchit/android/feature/designsystem/src/debug/res
+com.example.simmr.feature.designsystem-main-7 /Users/varun.gupta/Documents/dev/sanchit/android/feature/designsystem/src/main/res
+gradleHome-0 /Users/varun.gupta/.gradle

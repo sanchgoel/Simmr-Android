@@ -24,4 +24,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Simmr"
 include(":app")
+include(":core:designsystem")
+include(":feature:designsystem")
  

@@ -1,0 +1,26 @@
+<variant
+    name="debug"
+    package="com.example.simmr.feature.designsystem"
+    minSdkVersion="24"
+    targetSdkVersion="37.0"
+    debuggable="true"
+    mergedManifest="build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml"
+    partialResultsDir="build/intermediates/unit_test_lint_partial_results/debug/lintAnalyzeDebugUnitTest/out"
+    desugaredMethodsFiles="/Users/varun.gupta/.gradle/caches/9.4.1/transforms/09b67457af81c045b1528de56d6b6048/transformed/D8BackportedDesugaredMethods.txt">
+  <buildFeatures/>
+  <sourceProviders>
+  </sourceProviders>
+  <testSourceProviders>
+    <sourceProvider
+        manifests="src/test/AndroidManifest.xml"
+        javaDirectories="src/test/java:src/testDebug/java:src/test/kotlin:src/testDebug/kotlin"
+        assetsDirectories="src/test/assets:src/testDebug/assets"
+        keepRulesDirectories="src/test/keepRules:src/testDebug/keepRules"
+        unitTest="true"/>
+  </testSourceProviders>
+  <testFixturesSourceProviders>
+  </testFixturesSourceProviders>
+  <artifact
+      type="UNIT_TEST">
+  </artifact>
+</variant>

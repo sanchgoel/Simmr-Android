@@ -1,0 +1,7 @@
+int color simmr_cream_background 0x0
+int font rethink_sans_bold 0x0
+int font rethink_sans_extra_bold 0x0
+int font rethink_sans_italic 0x0
+int font rethink_sans_medium 0x0
+int font rethink_sans_regular 0x0
+int font rethink_sans_semi_bold 0x0
