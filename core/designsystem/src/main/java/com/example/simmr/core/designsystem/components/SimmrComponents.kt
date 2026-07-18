@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
@@ -124,14 +125,19 @@ fun SimmrSelectionChip(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    role: Role = Role.RadioButton,
     content: @Composable RowScope.() -> Unit,
 ) {
     Surface(
-        modifier = modifier.selectable(
-            selected = selected,
-            onClick = onClick,
-            role = Role.RadioButton,
-        ),
+        modifier = modifier
+            .alpha(if (enabled) 1f else 0.4f)
+            .selectable(
+                selected = selected,
+                onClick = onClick,
+                enabled = enabled,
+                role = role,
+            ),
         shape = RoundedCornerShape(SimmrRadius.Md),
         color = if (selected) SimmrColors.Tint else Color.Transparent,
         contentColor = SimmrColors.TextDark,

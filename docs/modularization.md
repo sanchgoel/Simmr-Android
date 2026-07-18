@@ -4,7 +4,10 @@
 
 ```text
 :app
- ├── :feature:designsystem
+ ├── :feature:onboarding
+ └── :core:designsystem
+
+:feature:onboarding
  └── :core:designsystem
 
 :feature:designsystem
@@ -28,7 +31,7 @@ depend on a feature or on the application module.
 
 The iOS app maps naturally to independent Android modules:
 
-- `:feature:onboarding`
+- `:feature:onboarding` (implemented)
 - `:feature:home`
 - `:feature:recipeoverview`
 - `:feature:cookingmode`
