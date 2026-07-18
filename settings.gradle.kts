@@ -25,6 +25,11 @@ dependencyResolutionManagement {
 rootProject.name = "Simmr"
 include(":app")
 include(":core:designsystem")
+include(":core:model")
+include(":core:data")
 include(":feature:designsystem")
 include(":feature:onboarding")
+include(":feature:home")
+include(":feature:recipe")
+include(":feature:cooking")
  

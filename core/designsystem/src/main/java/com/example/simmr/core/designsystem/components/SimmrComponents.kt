@@ -5,11 +5,18 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.background
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +30,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.simmr.core.designsystem.theme.SimmrColors
+import com.example.simmr.core.designsystem.theme.SimmrLayout
 import com.example.simmr.core.designsystem.theme.SimmrRadius
 import com.example.simmr.core.designsystem.theme.SimmrSpacing
 import com.example.simmr.core.designsystem.theme.SimmrStroke
@@ -62,6 +70,31 @@ fun SimmrSecondaryButton(
         border = BorderStroke(SimmrStroke.Regular, SimmrColors.Border),
         content = content,
     )
+}
+
+/** Fixed action area intended to sit outside a screen's scrollable content. */
+@Composable
+fun SimmrStickyFooter(
+    modifier: Modifier = Modifier,
+    showDivider: Boolean = true,
+    content: @Composable BoxScope.() -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(SimmrColors.CreamBackground)
+            .imePadding(),
+    ) {
+        if (showDivider) HorizontalDivider(color = SimmrColors.Border)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = SimmrLayout.ContentMaxWidth)
+                .align(Alignment.CenterHorizontally)
+                .padding(SimmrSpacing.Lg),
+            content = content,
+        )
+    }
 }
 
 @Composable

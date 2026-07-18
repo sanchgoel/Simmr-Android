@@ -23,3 +23,7 @@ object SimmrStroke {
     val Hairline = 1.dp
     val Regular = 1.5.dp
 }
+
+object SimmrLayout {
+    val ContentMaxWidth = 720.dp
+}

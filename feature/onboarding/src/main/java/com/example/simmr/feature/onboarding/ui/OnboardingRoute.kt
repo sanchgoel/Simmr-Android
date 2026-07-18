@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.simmr.core.designsystem.components.SimmrPrimaryButton
+import com.example.simmr.core.designsystem.components.SimmrStickyFooter
 import com.example.simmr.core.designsystem.components.SimmrSelectionChip
 import com.example.simmr.core.designsystem.theme.SimmrColors
 import com.example.simmr.core.designsystem.theme.SimmrRadius
@@ -383,12 +384,7 @@ private fun QuestionPage(
             }
         }
 
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .background(SimmrColors.CreamBackground)
-                .padding(SimmrSpacing.Lg),
-        ) {
+        SimmrStickyFooter(showDivider = false) {
             SimmrPrimaryButton(onClick = onContinue, enabled = canContinue) {
                 Text("Continue", style = SimmrTextStyles.Button)
             }
